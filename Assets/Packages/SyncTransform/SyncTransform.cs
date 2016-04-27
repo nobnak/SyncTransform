@@ -8,11 +8,12 @@ namespace SyncTransformSystem {
     public class SyncTransform : NetworkBehaviour {
         public float latency = 2f;
 
+        #pragma warning disable 0414
         [SyncVar(hook="OnTransformChange")]
         TransformData currentTransform;
+        #pragma warning restore
 
         float _nextTransformUpdateTime;
-        int _countTransformChange = 0;
         List<TransformData> _recievedData;
 
         void Awake() {
