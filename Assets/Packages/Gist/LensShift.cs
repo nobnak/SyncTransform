@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 namespace Gist {
+    
     public static class LensShift {
+        
         public static void Frustum(this Camera cam, out float left, out float right, out float bottom, out float top, out float near, out float far) {
             near = cam.nearClipPlane;
             far = cam.farClipPlane;
