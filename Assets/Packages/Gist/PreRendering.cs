@@ -20,9 +20,11 @@ namespace Gist {
             _editor = new FieldEditor (data);
     	}
         void OnDisable() {
-            if (_frames != null)
+            if (_frames != null) {
                 foreach (var f in _frames)
                     f.Dispose ();
+                _frames.Clear ();
+            }                
         }
         void OnRenderImage(RenderTexture src, RenderTexture dst) {
             if (_frames == null || data.passthrough) {
