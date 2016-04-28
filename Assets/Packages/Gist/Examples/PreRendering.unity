@@ -351,5 +351,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2495deb3c3f91478089f5ab25783b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0.1
-  maxFramesPerSec: 60
+  data:
+    passthrough: 0
+    delay: 0.1
+    maxFramesPerSec: 60
+  uiVisibility: 0
+  uiToggle: 112
