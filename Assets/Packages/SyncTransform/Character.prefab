@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b83476e903965e4eb7da074fad98496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  latency: 2
 --- !u!114 &11466590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -88,7 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   posFreq: 0.5
-  posSize: 5
+  posSize: 10
   rotFreq: 0.5
 --- !u!114 &11492610
 MonoBehaviour:

@@ -8,8 +8,10 @@ namespace SyncTransformSystem {
     public class SyncTransform : NetworkBehaviour {
         public float latency = 2f;
 
+        #pragma warning disable 0414
         [SyncVar(hook="OnCurrentTransformChange")]
         TransformData currentTransform;
+        #pragma warning restore
 
         float _nextTransformUpdateTime;
         List<TransformData> _recievedData;
@@ -67,8 +69,8 @@ namespace SyncTransformSystem {
         }
         void OnCurrentTransformChange(TransformData v) {
             var t = Time.timeSinceLevelLoad;
-            currentTransform.time = t;
-            _recievedData.Add (currentTransform);
+            v.time = t;
+            _recievedData.Add (v);
         }
         void CheckInitData() {
             if (_recievedData == null)
