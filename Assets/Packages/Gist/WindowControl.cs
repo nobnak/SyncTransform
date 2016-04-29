@@ -74,9 +74,14 @@ namespace Gist {
                 Debug.LogError ("Failed to Get Client Rect");
                 return false;
             }
+            var point = new NativePoint (){ x = rect.left, y = rect.top };
+            if (!ClientToScreen (hwnd, ref point)) {
+                Debug.LogError ("Failed to convert client to screen");
+                return false;
+            }
 
-            data.x = rect.left;
-            data.y = rect.top;
+            data.x = point.x;
+            data.y = point.y;
             data.width = rect.right - rect.left;
             data.height = rect.bottom - rect.top;
             _editor.Load ();
@@ -108,6 +113,11 @@ namespace Gist {
             public System.Int32 right;
             public System.Int32 bottom;
         }
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NativePoint {
+            public System.Int32 x;
+            public System.Int32 y;
+        }
 
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(System.IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
@@ -121,5 +131,7 @@ namespace Gist {
         public static extern int GetWindowLong(System.IntPtr hWnd, int nIndex);
         [DllImport("user32.dll")]
         public static extern bool GetClientRect(System.IntPtr hWnd, out NativeRect rect);
+        [DllImport("user32.dll")]
+        public static extern bool ClientToScreen(System.IntPtr hWnd, ref NativePoint point);
     }
 }

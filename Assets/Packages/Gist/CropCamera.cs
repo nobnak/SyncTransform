@@ -3,7 +3,7 @@ using System.Collections;
 using Gist;
 using DataUI;
 
-namespace SropCamraSystem {
+namespace Gist {
     [ExecuteInEditMode]
     [RequireComponent(typeof(Camera))]
     public class CropCamera : MonoBehaviour {
