@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    totalSize: {x: 2, y: 2}
+    totalSize: {x: 1, y: 1}
     offset: {x: 0, y: 0}
   debugUI: 0
   debugKey: 99

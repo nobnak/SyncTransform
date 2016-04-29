@@ -88,9 +88,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400b5c714736b93408398959174c57f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  posFreq: 0.5
-  posSize: 5
-  rotFreq: 0.5
+  posFreq: 0.2
+  posSize: 10
+  rotFreq: 0.2
 --- !u!114 &11492610
 MonoBehaviour:
   m_ObjectHideFlags: 1

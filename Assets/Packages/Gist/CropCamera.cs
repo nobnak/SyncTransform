@@ -74,8 +74,8 @@ namespace Gist {
         }
         [System.Serializable]
         public class Data {
-            public Vector2 totalSize = new Vector2(2f, 2f);
-            public Vector2 offset = new Vector2(1f, 1f);
+            public Vector2 totalSize = new Vector2(1f, 1f);
+            public Vector2 offset = Vector2.zero;
         }
     }
 }
