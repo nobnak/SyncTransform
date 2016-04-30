@@ -155,9 +155,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1003950794}
   - 20: {fileID: 1003950793}
-  - 92: {fileID: 1003950792}
-  - 124: {fileID: 1003950791}
-  - 81: {fileID: 1003950790}
   - 114: {fileID: 1003950795}
   - 114: {fileID: 1003950796}
   - 114: {fileID: 1003950797}
@@ -168,27 +165,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1003950790
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1003950789}
-  m_Enabled: 1
---- !u!124 &1003950791
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1003950789}
-  m_Enabled: 1
---- !u!92 &1003950792
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1003950789}
-  m_Enabled: 1
 --- !u!20 &1003950793
 Camera:
   m_ObjectHideFlags: 0
@@ -250,7 +226,8 @@ MonoBehaviour:
     totalSize: {x: 2, y: 2}
     offset: {x: 1, y: 1}
   debugUI: 0
-  debugKey: 99
+  debugKey: 115
+  outputTotalView: []
 --- !u!114 &1003950796
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,7 +10,9 @@ namespace Gist {
         public Data data;
 
         public bool debugUI;
-        public KeyCode debugKey = KeyCode.C;
+		public KeyCode debugKey = KeyCode.S;
+
+		public Camera[] outputTotalViews;
 
         Camera _attachedCamera;
         Rect _window = new Rect(10, 10, 200, 100);
@@ -29,22 +31,7 @@ namespace Gist {
                 debugUI = !debugUI;
             }
 
-            var totalSize = data.totalSize;
-            var normCropX = 1f / totalSize.x;
-            var normCropY = 1f / totalSize.y;
-            var normOffsetX = 2f * (data.offset.x + 0.5f) / totalSize.x - 1f;
-            var normOffsetY = 2f * (data.offset.y + 0.5f) / totalSize.y - 1f;
-            var totalAspect = _attachedCamera.aspect * data.totalSize.x / totalSize.y;
-
-            float left, right, bottom, top;
-            LensShift.NearPlane (_attachedCamera.nearClipPlane, totalAspect, _attachedCamera.fieldOfView, 
-                out left, out right, out bottom, out top);
-
-            var cropRight = right * (normCropX + normOffsetX);
-            var cropLeft = right * (-normCropX + normOffsetX);
-            var cropTop = top * (normCropY + normOffsetY);
-            var cropBottom = top * (-normCropY + normOffsetY);
-            _attachedCamera.Perspective (cropLeft, cropRight, cropBottom, cropTop, _attachedCamera.nearClipPlane, _attachedCamera.farClipPlane);
+			UpdateCrop();
     	}
         void OnGUI() {
             if (debugUI && _attachedCamera != null)
@@ -57,6 +44,52 @@ namespace Gist {
             GUILayout.EndVertical ();
             GUI.DragWindow ();
         }
+
+		void UpdateCrop () {
+			var totalSize = data.totalSize;
+			var normCropX = 1f / totalSize.x;
+			var normCropY = 1f / totalSize.y;
+			var normOffsetX = 2f * (data.offset.x + 0.5f) / totalSize.x - 1f;
+			var normOffsetY = 2f * (data.offset.y + 0.5f) / totalSize.y - 1f;
+			var totalAspect = _attachedCamera.aspect * data.totalSize.x / totalSize.y;
+
+			float left, right, bottom, top;
+			LensShift.NearPlane (_attachedCamera.nearClipPlane, totalAspect, _attachedCamera.fieldOfView, out left, out right, out bottom, out top);
+			var cropRight = right * (normCropX + normOffsetX);
+			var cropLeft = right * (-normCropX + normOffsetX);
+			var cropTop = top * (normCropY + normOffsetY);
+			var cropBottom = top * (-normCropY + normOffsetY);
+			_attachedCamera.Perspective (cropLeft, cropRight, cropBottom, cropTop, _attachedCamera.nearClipPlane, _attachedCamera.farClipPlane);
+
+			UpdateTotalCams (totalAspect);
+		}
+
+		void UpdateTotalCams(float totalAspect) {
+			if (outputTotalViews == null || outputTotalViews.Length == 0)
+				return;
+			
+			var pos = transform.position;
+			var rot = transform.rotation;
+			for (var i = 0; i < outputTotalViews.Length; i++) {
+				var totalCam = outputTotalViews [i];
+				if (totalCam == null)
+					continue;
+				totalCam.transform.position = pos;
+				totalCam.transform.rotation = rot;
+				totalCam.ResetProjectionMatrix ();
+				totalCam.orthographic = totalCam.orthographic;
+				totalCam.fieldOfView = _attachedCamera.fieldOfView;
+				totalCam.nearClipPlane = _attachedCamera.nearClipPlane;
+				totalCam.farClipPlane = _attachedCamera.farClipPlane;
+				totalCam.aspect = totalAspect;
+
+				var fixWidthFlexHeight = (float)totalCam.pixelWidth / (totalCam.pixelHeight * totalAspect);
+				var flexWidthFixHeight = (float)totalAspect * totalCam.pixelHeight / totalCam.pixelWidth;
+				totalCam.rect = (fixWidthFlexHeight <= 1f) ? 
+					new Rect(0f, 0f, 1f, fixWidthFlexHeight) :
+					new Rect(0f, 0f, flexWidthFixHeight, 1f);
+			}
+		}
 
         [System.Serializable]
         public struct IntVector2 {
