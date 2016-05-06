@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 namespace SyncTransformSystem {
-    [NetworkSettings(channel=1,sendInterval=0.05f)]
+    [NetworkSettings(channel=1,sendInterval=0.2f)]
     public class SyncTransform : NetworkBehaviour {
 		public const float EPSILON = 1e-5f;
 
