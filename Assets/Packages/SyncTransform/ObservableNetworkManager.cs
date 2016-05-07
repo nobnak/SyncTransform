@@ -10,9 +10,11 @@ namespace SyncTransformSystem {
 
         public override void OnStartServer () {
             OnStartServerEvent.Invoke (this);
+			base.OnStartServer ();
         }
         public override void OnStopServer () {
             OnStopServerEvent.Invoke (this);
+			base.OnStopServer ();
         }
 
         [System.Serializable]

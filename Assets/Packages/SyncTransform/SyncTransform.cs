@@ -4,11 +4,16 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 namespace SyncTransformSystem {
-    [NetworkSettings(channel=1,sendInterval=0.2f)]
+	[NetworkSettings(channel=Channels.DefaultUnreliable)]
     public class SyncTransform : NetworkBehaviour {
+		public enum SyncModeEnum { ClientRPC = 0, SyncVars }
 		public const float EPSILON = 1e-5f;
 
+		public SyncModeEnum syncMode;
         public float latency = 2f;
+
+		[SyncVar(hook="ChangeCurrentTransform")]
+		TransformData syncCurrentTransform;
 
         float _nextTransformUpdateTime;
         List<TransformData> _recievedData;
@@ -35,7 +40,14 @@ namespace SyncTransformSystem {
             if (_nextTransformUpdateTime < t) {
                 _nextTransformUpdateTime = t + GetNetworkSendInterval ();
 				var currentTransform = TransformData.Create (transform, t);
-                RpcChangeCurrentTransform (currentTransform);
+				switch (syncMode) {
+				case SyncModeEnum.SyncVars:
+					syncCurrentTransform = currentTransform;
+					break;
+				default:
+					RpcChangeCurrentTransform (currentTransform);
+					break;
+				}
             }
         }
 		#endregion
@@ -51,14 +63,14 @@ namespace SyncTransformSystem {
 
             var tnow = Time.timeSinceLevelLoad;
             var tinterp = -latency * GetNetworkSendInterval () + tnow;
+			while (_recievedData.Count >= 2 && _recievedData [1].time <= tinterp)
+				_recievedData.RemoveAt (0);
+			
             var d0 = _recievedData [0];
             var d1 = d0;
-            for (var i = 1; i < count; i++) {
-                d0 = d1;
-                d1 = _recievedData [i];
-                if (d0.time <= tinterp && tinterp <= d1.time)
-                    break;
-            }
+			if (_recievedData.Count >= 2)
+				d1 = _recievedData [1];
+			
 			TransformData.Load (transform, d0, d1, tinterp);
             return true;
         }
@@ -66,14 +78,17 @@ namespace SyncTransformSystem {
             if (_recievedData == null)
                 _recievedData = new List<TransformData> ();
         }
-        [ClientRpc]
-        void RpcChangeCurrentTransform(TransformData v) {
-            if (isServer)
-                return;
 
-            var t = Time.timeSinceLevelLoad;
-            v.time = t;
-            _recievedData.Add (v);
+		void ChangeCurrentTransform(TransformData v) {
+			var t = Time.timeSinceLevelLoad;
+			v.time = t;
+			_recievedData.Add (v);
+		}
+
+		[ClientRpc(channel=Channels.DefaultUnreliable)]
+        void RpcChangeCurrentTransform(TransformData v) {
+            if (!isServer)
+	            ChangeCurrentTransform (v);
         }
 		#endregion
 

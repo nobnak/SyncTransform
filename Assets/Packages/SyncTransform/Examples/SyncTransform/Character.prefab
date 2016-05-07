@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b83476e903965e4eb7da074fad98496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
   latency: 2
 --- !u!114 &11466590
 MonoBehaviour:
