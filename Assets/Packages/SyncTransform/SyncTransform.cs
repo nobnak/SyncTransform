@@ -12,8 +12,10 @@ namespace SyncTransformSystem {
 		public SyncModeEnum syncMode;
         public float latency = 2f;
 
+		#pragma warning disable 0414
 		[SyncVar(hook="ChangeCurrentTransform")]
 		TransformData syncCurrentTransform;
+		#pragma warning restore 0414
 
         float _nextTransformUpdateTime;
         List<TransformData> _recievedData;
