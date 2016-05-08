@@ -83,9 +83,9 @@ namespace Gist {
 				totalCam.farClipPlane = _attachedCamera.farClipPlane;
 				totalCam.aspect = totalAspect;
 
-				var fixWidthFlexHeight = (float)totalCam.pixelWidth / (totalCam.pixelHeight * totalAspect);
-				var flexWidthFixHeight = (float)totalAspect * totalCam.pixelHeight / totalCam.pixelWidth;
-				totalCam.rect = (fixWidthFlexHeight <= 1f) ? 
+				var fixWidthFlexHeight = (float)_attachedCamera.pixelWidth / (_attachedCamera.pixelHeight * totalAspect);
+				var flexWidthFixHeight = (float)totalAspect * _attachedCamera.pixelHeight / _attachedCamera.pixelWidth;
+				totalCam.rect = (fixWidthFlexHeight < 1f) ? 
 					new Rect(0f, 0f, 1f, fixWidthFlexHeight) :
 					new Rect(0f, 0f, flexWidthFixHeight, 1f);
 			}
