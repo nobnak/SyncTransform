@@ -9,10 +9,6 @@ namespace SyncTransformSystem {
 
 		Vector3 _prevMousePos;
 
-		public override void OnStartServer () {
-			NetworkServer.Spawn (gameObject);
-		}
-
 		void Update() {
 			if (isServer) {
 				MouseRotation();
