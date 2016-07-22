@@ -2,34 +2,35 @@
 using System.Collections;
 
 namespace SyncTransformSystem {
-    [RequireComponent(typeof(SkinnedMeshRenderer))]
+    
     public class MirrorBones : MonoBehaviour {
+        
         public SkinnedMeshRenderer sourceSkin;
+        public SkinnedMeshRenderer targetSkin;
 
-        SkinnedMeshRenderer _attachedSkin;
-
-        void Awake () {
-            _attachedSkin = GetComponent<SkinnedMeshRenderer> ();
+        public static void SyncBones(Transform[] src, Transform[] dst) {
+            for (var i = 0; i < src.Length; i++) {
+                var str = src [i];
+                var dtr = dst [i];
+                dtr.localPosition = str.localPosition;
+                dtr.localRotation = str.localRotation;
+                dtr.localScale = str.localScale;
+            }
         }
+
     	void Update () {
-            if (sourceSkin == null || _attachedSkin == null) {
+            if (sourceSkin == null || targetSkin == null) {
                 Debug.LogError ("Null");
                 return;
             }            
             var s = sourceSkin.bones;
-            var d = _attachedSkin.bones;
+            var d = targetSkin.bones;
             if (s == null || d == null || s.Length != d.Length) {
                 Debug.LogError ("Incompatible bones");
                 return;
             }
 
-            for (var i = 0; i < s.Length; i++) {
-                var str = s [i];
-                var dtr = d [i];
-                dtr.localPosition = str.localPosition;
-                dtr.localRotation = str.localRotation;
-                dtr.localScale = str.localScale;
-            }
+            SyncBones (s, d);
     	}
     }
 }
