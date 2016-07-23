@@ -35,7 +35,6 @@ namespace SyncTransformSystem {
 		}
 		protected override void ApplyData () {
 			if (_updateCount > 0) {
-				Debug.LogFormat ("Diff count={0}", _updateCount);
 				_updateCount = 0;
 				_datastream.Add (_syncBones.Create (Time.timeSinceLevelLoad));
 			}

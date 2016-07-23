@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SyncTransformSystem {
 	[RequireComponent(typeof(Animator))]
-	[NetworkSettings(channel=1,sendInterval=0.2f)]
+	[NetworkSettings(channel=1,sendInterval=0.1f)]
 	public abstract class SyncAnimationBase : NetworkBehaviour {
 		public float latency = 2f;
         public SkinnedMeshRenderer skin;
