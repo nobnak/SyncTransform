@@ -5,15 +5,34 @@ using UnityEngine.Networking;
 namespace SyncTransformSystem {
     [NetworkSettings(channel=Channels.DefaultUnreliable)]
     public class SyncAnimation : NetworkBehaviour {
+        public SkinnedMeshRenderer skin;
 
-    	// Use this for initialization
-    	void Start () {
-    	
-    	}
-    	
-    	// Update is called once per frame
-    	void Update () {
-    	
-    	}
+        [SyncVar]
+        Skelton _skelton;
+
+        void Update() {
+            if (isServer) {
+                
+            } else if (isClient) {
+                
+            }
+        }
+
+        #region Server
+        #endregion
+
+        #region Client
+        #endregion
+
+        public struct Bone {
+            public Vector3 position;
+            public Quaternion rotation;
+            public Vector3 scale;
+        }
+        public struct Skelton {
+            public float time;
+            public Bone root;
+            public Bone[] bones;
+        }
     }
 }
