@@ -32,8 +32,7 @@ namespace SyncTransformSystem {
 					_nextUpdateTime += GetNetworkSendInterval ();
 					NotifyData ();
 				}
-            }
-			if (isClient) {
+			} else if (isClient) {
 				ApplyData();
             }
         }
