@@ -1394,11 +1394,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 185622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f37e71faed9f704db3d69f249f17084, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e1de8ba4e058a74ab36bab42bfe1c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   latency: 2
-  channel: 1
   skin: {fileID: 13723716}
 --- !u!137 &13723716
 SkinnedMeshRenderer:

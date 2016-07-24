@@ -36,10 +36,7 @@ namespace SyncTransformSystem {
 		}
 		protected override void NotifyData () {
 			_tmpdata1.Save (Time.timeSinceLevelLoad, transform, _bones);
-			SaveDataChangeAt (0, _tmpdata0.root, _tmpdata1.root);
-			var boneCount = _syncPositionList.Count;
-			for (var i = 1; i < boneCount; i++)
-				SaveDataChangeAt (i, _tmpdata0.bones [i - 1], _tmpdata1.bones [i - 1]);
+			SaveDataChange();
 			SwapTemp();
 		}
 		protected override void ApplyData () {
@@ -75,15 +72,10 @@ namespace SyncTransformSystem {
 			_syncPositionList.Clear ();
 			_syncRotationList.Clear ();
 			_syncScaleList.Clear ();
-			var root = sk.root;
-			_syncPositionList.Add (root.position);
-			_syncRotationList.Add (root.rotation);
-			_syncScaleList.Add (root.scale);
+			AddBoneOnData (sk.root);
 			var boneCount = sk.bones.Length;
-			for (var i = 0; i < boneCount; i++) {
-				var bone = sk.bones [i];
-				AddBoneOnData(bone);
-			}
+			for (var i = 0; i < boneCount; i++)
+				AddBoneOnData(sk.bones [i]);
 		}
 		Bone CreateBoneFromDataAt (int i) {
 			return new Bone () {
@@ -115,7 +107,12 @@ namespace SyncTransformSystem {
 			_syncRotationList.Add (bone.rotation);
 			_syncScaleList.Add (bone.scale);
 		}
-
+		void SaveDataChange () {
+			SaveDataChangeAt (0, _tmpdata0.root, _tmpdata1.root);
+			var boneCount = _syncPositionList.Count;
+			for (var i = 1; i < boneCount; i++)
+				SaveDataChangeAt (i, _tmpdata0.bones [i - 1], _tmpdata1.bones [i - 1]);
+		}
 		void SaveDataChangeAt(int i, Bone prev, Bone next) {
 			if (prev.position != next.position)
 				_syncPositionList [i] = next.position;
