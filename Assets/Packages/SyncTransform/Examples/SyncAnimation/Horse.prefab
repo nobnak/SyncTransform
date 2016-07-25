@@ -642,6 +642,7 @@ GameObject:
   - 114: {fileID: 11478618}
   - 95: {fileID: 9586688}
   - 114: {fileID: 11480650}
+  - 114: {fileID: 11412658}
   m_Layer: 0
   m_Name: Horse
   m_TagString: Untagged
@@ -1354,6 +1355,19 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11412658
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 185622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 484454bd0d18eca4eb334493ca691a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  freq: 0.1
+  scale: 1
 --- !u!114 &11478618
 MonoBehaviour:
   m_ObjectHideFlags: 1
