@@ -2,13 +2,13 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SyncTransformSystem {
 	[RequireComponent(typeof(Animator))]
 	[NetworkSettings(channel=1,sendInterval=0.1f)]
 	public abstract class SyncAnimationBase : NetworkBehaviour {
 		public float latency = 2f;
-        public SkinnedMeshRenderer skin;
 
 		protected Animator _animator;
 		protected Transform[] _bones;
@@ -19,7 +19,7 @@ namespace SyncTransformSystem {
 			_animator.enabled = false;
 
 			_nextUpdateTime = -1f;
-			_bones = skin.bones;
+            _bones = Bones (transform);
 		}
 		public override void OnStartServer () {
 			base.OnStartServer ();
@@ -37,6 +37,19 @@ namespace SyncTransformSystem {
             }
         }
 
+        #region Bones
+        public static IEnumerable<Transform> Listup(Transform root, bool includingRoot = true) {
+            if (includingRoot)
+                yield return root;
+            for (var i = 0; i < root.childCount; i++)
+                foreach (var tr in Listup (root.GetChild (i)))
+                    yield return tr;
+        }
+        public static Transform[] Bones(Transform root, bool includingRoot = true) {
+            return Listup (root, includingRoot).ToArray ();
+        }
+        #endregion
+
         #region Server
 		protected abstract void NotifyData();
         #endregion
@@ -51,7 +64,13 @@ namespace SyncTransformSystem {
 		}
         #endregion
 
+        #region Classes
         public struct Bone {
+            [System.Flags]
+            public enum ChangeFlags { 
+                None = 0, Position = 1 << 0, Rotation = 1 << 1, Scale = 1 << 2,
+                All = Position | Rotation | Scale
+            }
             public Vector3 position;
             public Quaternion rotation;
             public Vector3 scale;
@@ -71,10 +90,10 @@ namespace SyncTransformSystem {
 				rotation = Quaternion.Lerp (d0.rotation, d1.rotation, t);
 				scale = Vector3.Lerp (d0.scale, d1.scale, t);
 			}
-			public int Changed(Bone prev) {
-				return (position != prev.position ? (1 << 0) : 0)
-				| (rotation != prev.rotation ? (1 << 1) : 0)
-				| (scale != prev.scale ? (1 << 2) : 0);
+			public ChangeFlags Changed(Bone prev) {
+                return (position != prev.position ? ChangeFlags.Position : 0)
+                    | (rotation != prev.rotation ? ChangeFlags.Rotation : 0)
+                    | (scale != prev.scale ? ChangeFlags.Scale : 0);
 			}
         }
         public struct Skelton {
@@ -104,5 +123,6 @@ namespace SyncTransformSystem {
 					bones [i] = org.bones [i];
 			}
         }
+        #endregion
     }
 }

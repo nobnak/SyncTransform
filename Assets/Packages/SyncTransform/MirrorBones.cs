@@ -2,11 +2,14 @@
 using System.Collections;
 
 namespace SyncTransformSystem {
-    
+    [RequireComponent(typeof(Animator))]
     public class MirrorBones : MonoBehaviour {
         
-        public SkinnedMeshRenderer sourceSkin;
-        public SkinnedMeshRenderer targetSkin;
+        public Animator src;
+
+        Animator _anim;
+        Transform[] _src;
+        Transform[] _dst;
 
         public static void SyncBones(Transform[] src, Transform[] dst) {
             for (var i = 0; i < src.Length; i++) {
@@ -18,19 +21,20 @@ namespace SyncTransformSystem {
             }
         }
 
+        void Awake() {
+            _anim = GetComponent<Animator> ();
+            _src = SyncAnimation.Bones (src.transform, false);
+            _dst = SyncAnimation.Bones (transform, false);
+
+            Debug.LogFormat ("Bone count={0}", _src.Length);
+        }
     	void Update () {
-            if (sourceSkin == null || targetSkin == null) {
-                Debug.LogError ("Null");
-                return;
-            }            
-            var s = sourceSkin.bones;
-            var d = targetSkin.bones;
-            if (s == null || d == null || s.Length != d.Length) {
+            if (_src == null || _dst == null || _src.Length != _dst.Length) {
                 Debug.LogError ("Incompatible bones");
                 return;
             }
 
-            SyncBones (s, d);
+            SyncBones (_src, _dst);
     	}
     }
 }

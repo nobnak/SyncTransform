@@ -40,14 +40,15 @@ namespace SyncTransformSystem {
 			SwapTemp();
 		}
 		protected override void ApplyData () {
-			if (_updateCount > 0) {
+            if (_updateCount > 0) {
 				_updateCount = 0;
 				_datastream.Add (CreateSkeltonFromData(Time.timeSinceLevelLoad));
 			}
 
 			var count = _datastream.Count;
-			if (count <= 0)
-				return;
+            if (count <= 0) {
+                return;
+            }
 
 			var tnow = Time.timeSinceLevelLoad;
 			var tinterp = -latency * GetNetworkSendInterval () + tnow;
@@ -114,11 +115,12 @@ namespace SyncTransformSystem {
 				SaveDataChangeAt (i, _tmpdata0.bones [i - 1], _tmpdata1.bones [i - 1]);
 		}
 		void SaveDataChangeAt(int i, Bone prev, Bone next) {
-			if (prev.position != next.position)
+            var change = next.Changed (prev);
+            if ((change & Bone.ChangeFlags.Position) != 0)
 				_syncPositionList [i] = next.position;
-			if (prev.rotation != next.rotation)
+            if ((change & Bone.ChangeFlags.Rotation) != 0)
 				_syncRotationList [i] = next.rotation;
-			if (prev.scale != next.scale)
+            if ((change & Bone.ChangeFlags.Scale) != 0)
 				_syncScaleList [i] = next.scale;
 		}
 
