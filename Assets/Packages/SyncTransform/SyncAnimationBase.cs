@@ -6,8 +6,11 @@ using System.Linq;
 
 namespace SyncTransformSystem {
 	[RequireComponent(typeof(Animator))]
-	[NetworkSettings(channel=1,sendInterval=0.1f)]
+	[NetworkSettings(channel=1)]
 	public abstract class SyncAnimationBase : NetworkBehaviour {
+		[SyncVar]
+		public float interval = 0.1f;
+		[SyncVar]
 		public float latency = 2f;
 
 		protected Animator _animator;
@@ -25,6 +28,8 @@ namespace SyncTransformSystem {
 			base.OnStartServer ();
 			_animator.enabled = true;
 		}
+		public override float GetNetworkSendInterval () { return interval; }
+
         protected void Update() {
             if (isServer) {
 				var t = Time.timeSinceLevelLoad;

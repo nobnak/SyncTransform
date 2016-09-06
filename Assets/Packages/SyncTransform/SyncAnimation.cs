@@ -52,7 +52,7 @@ namespace SyncTransformSystem {
 
 			var tnow = Time.timeSinceLevelLoad;
 			var tinterp = -latency * GetNetworkSendInterval () + tnow;
-			while (_datastream.Count >= 2 && _datastream [1].time <= tinterp)
+			while (_datastream.Count >= 3 && _datastream [1].time < tinterp)
 				_datastream.RemoveAt (0);
 
 			var d0 = _datastream [0];
