@@ -45,16 +45,14 @@ namespace SyncTransformSystem {
 				_datastream.Add (CreateSkeltonFromData(Time.timeSinceLevelLoad));
 			}
 
-			var count = _datastream.Count;
-            if (count <= 0) {
-                return;
-            }
+			if (_datastream.Count <= 0)
+				return;
 
 			var tnow = Time.timeSinceLevelLoad;
 			var tinterp = -latency * GetNetworkSendInterval () + tnow;
-			while (_datastream.Count >= 3 && _datastream [1].time < tinterp)
+			while (_datastream.Count >= 2 && _datastream [1].time < tinterp)
 				_datastream.RemoveAt (0);
-
+			
 			var d0 = _datastream [0];
 			var d1 = d0;
 			if (_datastream.Count >= 2)

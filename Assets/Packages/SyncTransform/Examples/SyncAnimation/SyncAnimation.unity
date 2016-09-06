@@ -333,7 +333,16 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 11412658, guid: b20c3fcf2797e0b44b5a11efb5ba89b4, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11480650, guid: b20c3fcf2797e0b44b5a11efb5ba89b4, type: 2}
+      propertyPath: interval
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 11412658, guid: b20c3fcf2797e0b44b5a11efb5ba89b4, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: b20c3fcf2797e0b44b5a11efb5ba89b4, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1876065177
