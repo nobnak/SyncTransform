@@ -32,7 +32,7 @@ namespace SyncTransformSystem {
 			_animator.enabled = false;
 
 			_nextUpdateTime = -1f;
-			_bones = Bones (transform);
+			_bones = BoneList (transform);
 
 			_syncPositionList = new SyncVector3List ();
 			_syncRotationList = new SyncQuaternionList ();
@@ -57,9 +57,7 @@ namespace SyncTransformSystem {
 			_syncPositionList.Clear ();
 			_syncRotationList.Clear ();
 			_syncScaleList.Clear ();
-			AddBoneOnData (sk.root);
-			var boneCount = sk.bones.Length;
-			for (var i = 0; i < boneCount; i++)
+            for (var i = 0; i < sk.bones.Length; i++)
 				AddBoneOnData(sk.bones [i]);
 		}
 		Bone CreateBoneFromDataAt (int i) {
@@ -71,12 +69,11 @@ namespace SyncTransformSystem {
 		}
 		Skelton CreateSkeltonFromData (float time) {
 			var boneCount = _syncPositionList.Count;
-			var bones = new Bone[boneCount - 1];
-			for (var i = 1; i < boneCount; i++)
-				bones [i - 1] = CreateBoneFromDataAt (i);
+			var bones = new Bone[boneCount];
+			for (var i = 0; i < boneCount; i++)
+				bones [i] = CreateBoneFromDataAt (i);
 			var sk = new Skelton () {
 				time = time,
-				root = CreateBoneFromDataAt (0),
 				bones = bones
 			};
 			return sk;
@@ -93,10 +90,9 @@ namespace SyncTransformSystem {
 			_syncScaleList.Add (bone.scale);
 		}
 		void SaveDataChange () {
-			SaveDataChangeAt (0, _tmpdata0.root, _tmpdata1.root);
 			var boneCount = _syncPositionList.Count;
-			for (var i = 1; i < boneCount; i++)
-				SaveDataChangeAt (i, _tmpdata0.bones [i - 1], _tmpdata1.bones [i - 1]);
+			for (var i = 0; i < boneCount; i++)
+				SaveDataChangeAt (i, _tmpdata0.bones [i], _tmpdata1.bones [i]);
 		}
 		void SaveDataChangeAt(int i, Bone prev, Bone next) {
             var change = next.Changed (prev);
@@ -119,7 +115,7 @@ namespace SyncTransformSystem {
 				foreach (var tr in Listup (root.GetChild (i)))
 					yield return tr;
 		}
-		public static Transform[] Bones(Transform root, bool includingRoot = true) {
+		public static Transform[] BoneList(Transform root, bool includingRoot = true) {
 			return Listup (root, includingRoot).ToArray ();
 		}
 		#endregion
@@ -127,11 +123,11 @@ namespace SyncTransformSystem {
 		#region Server
 		public override void OnStartServer () {
 			_animator.enabled = true;
-			_tmpdata0.Save (Time.timeSinceLevelLoad, transform, _bones);
+			_tmpdata0.Save (Time.timeSinceLevelLoad, _bones);
 			InitData(_tmpdata0);
 		}
 		void NotifyData () {
-			_tmpdata1.Save (Time.timeSinceLevelLoad, transform, _bones);
+			_tmpdata1.Save (Time.timeSinceLevelLoad, _bones);
 			SaveDataChange();
 			SwapTemp();
 		}
@@ -170,13 +166,7 @@ namespace SyncTransformSystem {
 				_tmpdata0.Interpolate (d0, d1, t);
 				d0 = _tmpdata0;
 			}
-			Load (d0);
-		}
-		void Load(Skelton sk) {
-			sk.root.Load (transform);
-			var boneCount = sk.bones.Length;
-			for (var i = 0; i < boneCount; i++)
-				sk.bones [i].Load (_bones [i]);
+            d0.Load (_bones);
 		}
 		#endregion
 
@@ -214,29 +204,27 @@ namespace SyncTransformSystem {
 		}
 		public struct Skelton {
 			public float time;
-			public Bone root;
 			public Bone[] bones;
 
-			public Skelton Save(float time, Transform root, Transform[] bones) {
-				for (var i = 0; i < bones.Length; i++)
-					this.bones [i] = new Bone (bones[i]);
-				this.time = time;
-				this.root = new Bone (root);
+			public Skelton Save(float srcTime, Transform[] src) {
+                time = srcTime;
+				for (var i = 0; i < src.Length; i++)
+					this.bones [i] = new Bone (src[i]);
 				return this;
 			}
+            public void Load(Transform[] dst) {
+                for (var i = 0; i < bones.Length; i++)
+                    bones [i].Load (dst [i]);
+            }
 			public void Interpolate(Skelton d0, Skelton d1, float t) {
 				time = Mathf.Lerp (d0.time, d1.time, t);
-				root.Interpolate (d0.root, d1.root, t);
-				var boneCount = bones.Length;
-				for (var i = 0; i < boneCount; i++)
+                for (var i = 0; i < bones.Length; i++)
 					bones [i].Interpolate (d0.bones [i], d1.bones [i], t);
 			}
-			public void Clone(Skelton org) {
-				time = org.time;
-				root = org.root;
-				var boneCount = bones.Length;
-				for (var i = 0; i < boneCount; i++)
-					bones [i] = org.bones [i];
+			public void Clone(Skelton src) {
+				time = src.time;
+                for (var i = 0; i < bones.Length; i++)
+					bones [i] = src.bones [i];
 			}
 		}
 		#endregion
