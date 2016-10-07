@@ -26,12 +26,13 @@ namespace SyncTransformSystem {
 		int _updateCount;
 
 		public override float GetNetworkSendInterval () { return interval; }
+		public float Time { get { return TimeProvider.Instance.Time; } }
 
 		void Awake () {
 			_animator = GetComponent<Animator> ();
 			_animator.enabled = false;
 
-			_nextUpdateTime = -1f;
+			_nextUpdateTime = Time;
 			_bones = BoneList (transform);
 
 			_syncPositionList = new SyncVector3List ();
@@ -43,7 +44,7 @@ namespace SyncTransformSystem {
 		}
 		void Update() {
 			if (isServer) {
-				var t = Time.timeSinceLevelLoad;
+				var t = Time;
 				if (_nextUpdateTime <= t) {
 					_nextUpdateTime += GetNetworkSendInterval ();
 					NotifyData ();
@@ -123,11 +124,11 @@ namespace SyncTransformSystem {
 		#region Server
 		public override void OnStartServer () {
 			_animator.enabled = true;
-			_tmpdata0.Save (Time.timeSinceLevelLoad, _bones);
+			_tmpdata0.Save (Time, _bones);
 			InitData(_tmpdata0);
 		}
 		void NotifyData () {
-			_tmpdata1.Save (Time.timeSinceLevelLoad, _bones);
+			_tmpdata1.Save (Time, _bones);
 			SaveDataChange();
 			SwapTemp();
 		}
@@ -135,7 +136,7 @@ namespace SyncTransformSystem {
 
 		#region Client
 		public override void OnStartClient () {
-			_datastream.Add (CreateSkeltonFromData(Time.timeSinceLevelLoad));
+			_datastream.Add (CreateSkeltonFromData(Time));
 			_updateCount = 0;
 			_syncPositionList.Callback = (op, i) => _updateCount++;
 			_syncRotationList.Callback = (op, i) => _updateCount++;
@@ -144,13 +145,13 @@ namespace SyncTransformSystem {
 		void ApplyData () {
 			if (_updateCount > 0) {
 				_updateCount = 0;
-				_datastream.Add (CreateSkeltonFromData(Time.timeSinceLevelLoad));
+				_datastream.Add (CreateSkeltonFromData(Time));
 			}
 
 			if (_datastream.Count <= 0)
 				return;
 
-			var tnow = Time.timeSinceLevelLoad;
+			var tnow = Time;
 			var tinterp = -latency * GetNetworkSendInterval () + tnow;
 			while (_datastream.Count >= 2 && _datastream [1].time < tinterp)
 				_datastream.RemoveAt (0);

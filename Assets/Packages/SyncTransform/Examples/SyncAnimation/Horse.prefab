@@ -642,7 +642,6 @@ GameObject:
   - 114: {fileID: 11478618}
   - 95: {fileID: 9586688}
   - 114: {fileID: 11480650}
-  - 114: {fileID: 11412658}
   m_Layer: 0
   m_Name: Horse
   m_TagString: Untagged
@@ -823,10 +822,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 185622}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -3.941, y: 2.087, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 445132}
   - {fileID: 436242}
@@ -1355,19 +1354,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11412658
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 185622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 484454bd0d18eca4eb334493ca691a71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  freq: 0.1
-  scale: 1
 --- !u!114 &11478618
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1411,8 +1397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28082dd9926b0ee43af0a5af41af6c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interval: 0.2
   latency: 2
-  skin: {fileID: 13723716}
 --- !u!137 &13723716
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -1422,17 +1408,20 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: a432b82830b61dd439c932daaf8f4b91, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -1442,6 +1431,7 @@ SkinnedMeshRenderer:
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
   m_Mesh: {fileID: 4300002, guid: a85d92b72304a79449904f3b49e3d5ea, type: 3}
   m_Bones:
   - {fileID: 497872}
